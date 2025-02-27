@@ -1,0 +1,24 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/robotica/taller1_grupo_1/install/turtle_bot_1/lib/python3.10/site-packages",
+        "/home/robotica/T1_ws/build/taller1",
+        "/home/robotica/T1_ws/install/taller1/lib/python3.10/site-packages",
+        "/home/robotica/taller1_ws/build/turtle_bot_teleop",
+        "/home/robotica/taller1_ws/install/turtle_bot_teleop/lib/python3.10/site-packages",
+        "/home/robotica/taller1_ws/src/build/turtle_bot_teleop",
+        "/home/robotica/taller1_ws/src/install/turtle_bot_teleop/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/robotica/taller1_grupo_1/install/turtle_bot_1/lib/python3.10/site-packages",
+        "/home/robotica/T1_ws/build/taller1",
+        "/home/robotica/T1_ws/install/taller1/lib/python3.10/site-packages",
+        "/home/robotica/taller1_ws/build/turtle_bot_teleop",
+        "/home/robotica/taller1_ws/install/turtle_bot_teleop/lib/python3.10/site-packages",
+        "/home/robotica/taller1_ws/src/build/turtle_bot_teleop",
+        "/home/robotica/taller1_ws/src/install/turtle_bot_teleop/lib/python3.10/site-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
+}
