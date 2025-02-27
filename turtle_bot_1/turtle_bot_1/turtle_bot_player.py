@@ -28,21 +28,15 @@ class FilePublisher(Node):
             response.result = False
             #response.message = "No file path received."
         return response
-        """
-        if request.data:
-            
-            filename = filename = input("Ingrese la ruta completa del archivo (incluya la extensión .txt): ").strip()
-            success = self.publish_from_file(filename)
-            response.success = success
-            response.message = "Archivo leído y mensaje publicado." if success else "Error al leer el archivo."
-        else:
-            response.success = False
-            response.message = "Servicio llamado con 'False'. No se realizó ninguna acción."
-        """
+        
     
     def publish_next(self):
         global lines
         global index
+        if index >= len(lines):
+            self.get_logger().info("Fin del Archivo.")
+            self.timer.cancel()  # Stop the timer to prevent further calls
+            return
         line = lines[index].strip().rstrip(';')  # Eliminar espacios y el `;` final
         values = line.split(',')  # Separar por comas
         linear_x = float(values[0].strip())
