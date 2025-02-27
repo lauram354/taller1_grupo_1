@@ -67,7 +67,7 @@ class FilePublisher(Node):
 
     def publish_from_file(self, filename):
         """Reads a file and publishes Twist messages."""
-        delay = 0.05
+        delay = 0.043
         global lines
         try:
             with open(filename, 'r') as file:
