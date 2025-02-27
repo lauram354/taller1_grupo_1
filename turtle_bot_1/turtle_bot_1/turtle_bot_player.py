@@ -43,6 +43,10 @@ class FilePublisher(Node):
     def publish_next(self):
         global lines
         global index
+        if index >= len(lines):
+            self.get_logger().info("Fin del archivo.")
+            self.timer.cancel()
+            return
         line = lines[index].strip().rstrip(';')  # Eliminar espacios y el `;` final
         values = line.split(',')  # Separar por comas
         linear_x = float(values[0].strip())
