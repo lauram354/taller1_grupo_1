@@ -22,7 +22,7 @@ class TurtleBotTeleop(Node):
   
 		self.file_lock = threading.Lock()
   
-		self.timer = self.create_timer(0.1, self.read_keyboard)
+		self.timer = self.create_timer(0.01,self.read_keyboard)
 		
 	def save_file_callback(self,msg:String):
 		self.name_file = msg.data
@@ -33,9 +33,12 @@ class TurtleBotTeleop(Node):
 		key = self.getKey()
 		if key == '\x03':
 			raise KeyboardInterrupt
-		if key != '':
+		if key:
 			self.get_logger().info(f"Tecla presionada: {key}")
 		self.send_velocity_command(key)
+
+		if key == '':
+			self.send_velocity_command(None)
   
 	def getKey(self):
 		tty.setraw(sys.stdin.fileno())
