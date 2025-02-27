@@ -33,7 +33,7 @@ class TurtleBotTeleop(Node):
 		key = self.getKey()
 		if key == '\x03':
 			raise KeyboardInterrupt
-		if key != '':
+		if key is not None:
 			self.get_logger().info(f"Tecla presionada: {key}")
 		self.send_velocity_command(key)
   
@@ -45,7 +45,7 @@ class TurtleBotTeleop(Node):
 			self.get_logger().info("holi")
 	
 		else:
-			key = ''
+			key = None
 		
 		
 		termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.settings)	
