@@ -1,5 +1,6 @@
 #!usr/bin/env python3
 import threading
+import time
 import rclpy 
 import os 
 import select
@@ -8,21 +9,23 @@ from rclpy.node import Node
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 import signal
+from glob import glob
 
 class TurtleBotTeleop(Node):
 	def __init__(self):
 		super().__init__("turtle_bot_teleop")
-		self.get_logger().info("Inicializar en dev")
+		self.get_logger().info("Inicializar en dev new")
 		self.file_sub = self.create_subscription(String, "/save_file_name", self.save_file_callback, 10)
 		self.cmd_vel_pub = self.create_publisher(Twist, "/turtlebot_cmdVel", 10)
 		self.settings =  termios.tcgetattr(sys.stdin)
+		self.T0 = time.time()
 		self.name_file = None
 		self.linVel = float(input("Ingrese la velocidad lineal: "))
 		self.angVel = float(input("Ingrese la velocidad angular: "))
   
 		self.file_lock = threading.Lock()
   
-		self.timer = self.create_timer(0.01,self.read_keyboard)
+		self.timer = self.create_timer(0.05,self.read_keyboard)
 		
 	def save_file_callback(self,msg:String):
 		self.name_file = msg.data
@@ -38,7 +41,7 @@ class TurtleBotTeleop(Node):
 		self.send_velocity_command(key)
 
 		if key == '':
-			self.send_velocity_command(None)
+			self.send_velocity_command('')
   
 	def getKey(self):
 		tty.setraw(sys.stdin.fileno())
@@ -56,6 +59,8 @@ class TurtleBotTeleop(Node):
 
 	
 	def send_velocity_command(self, key):
+		
+		timestamp = time.time() - self.T0
 		msg = Twist()
 		if key == 'a':
 			msg.linear.x = 0.0
@@ -74,17 +79,28 @@ class TurtleBotTeleop(Node):
 		
 		self.cmd_vel_pub.publish(msg)
   
+		
 		if self.name_file:
-			threading.Thread(target=self.write_to_file, args=(msg,)).start()
+			threading.Thread(target=self.write_to_file, args=(msg,timestamp)).start()
   
-	def write_to_file(self, msg):
+	def write_to_file(self, msg,timestamp):
 		with self.file_lock:  # Sincronizar el acceso al archivo
 			try:
 				with open(self.name_file, "a") as f:
-					f.write(f"{msg.linear.x},{msg.angular.z};\n")
+					f.write(f"{msg.linear.x},{msg.angular.z},{timestamp};\n")
 					f.flush()  # Forzar la escritura en el disco
+				# Ordenar el archivo por timestamp
+				with open(self.name_file, "r") as f:
+					lines = f.readlines()
+				
+				sorted_lines = sorted(lines, key=lambda x: float(x.strip().split(',')[-1].replace(';', '')))
+				
+				with open(self.name_file, "w") as f:
+					f.writelines(sorted_lines)
 			except Exception as e:
 				self.get_logger().error(f"Error al escribir en el archivo: {e}")
+			
+    
   	 
 def main(args=None):
 	rclpy.init(args=args)
